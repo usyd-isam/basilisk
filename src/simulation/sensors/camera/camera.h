@@ -86,6 +86,10 @@ public:
     Eigen::Vector3d hsv{Eigen::Vector3d::Zero()};    //!< (double) HSV color correction, H (-pi/pi) hue shift, S and V are percent multipliers
     Eigen::Vector3d bgrPercent{Eigen::Vector3d::Zero()}; //!< (int) BGR color correction values as percent
 
+     /* Depth parameters */
+    int renderMode; //!< (Optional) Value of 0 to render visual image (default), value of 1 to render depth buffer to image
+    double depthMapClippingPlanes[2]; //!< (Optional) [m] Set the bounds of rendered depth map by setting the near and far clipping planes when in renderMode=1 (depthMap mode). Default values of 0.1 and 100.
+
     BSKLogger bskLogger;                      //!< -- BSK Logging
 
 private:

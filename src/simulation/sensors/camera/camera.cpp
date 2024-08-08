@@ -330,6 +330,9 @@ void Camera::UpdateState(uint64_t currentSimNanos)
     cameraMsg.ppFocalLength = this->ppFocalLength;
     cameraMsg.ppFocusDistance = this->ppFocusDistance;
     cameraMsg.ppMaxBlurSize = this->ppMaxBlurSize;
+    cameraMsg.renderMode = this->renderMode;
+    cameraMsg.depthMapClippingPlanes[0] = this->depthMapClippingPlanes[0];
+    cameraMsg.depthMapClippingPlanes[1] = this->depthMapClippingPlanes[1];
 
     /*! - Update the camera config data no matter if an image is present*/
     this->cameraConfigOutMsg.write(&cameraMsg, this->moduleID, currentSimNanos);
