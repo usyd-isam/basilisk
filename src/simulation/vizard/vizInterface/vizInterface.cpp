@@ -19,6 +19,8 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
+#include <thread>
+#include <chrono>
 
 #include "vizInterface.h"
 #include "architecture/utilities/linearAlgebra.h"
@@ -1387,6 +1389,10 @@ void VizInterface::receiveUserInput(uint64_t CurrentSimNanos){
  */
 void VizInterface::requestImage(size_t camCounter, uint64_t CurrentSimNanos)
 {
+
+    /*! -- Short delay for update */
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
     char buffer[10];
     zmq_recv(this->requester_socket, buffer, 10, 0);
     /*! -- Send request */
