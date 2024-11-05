@@ -1208,11 +1208,18 @@ void VizInterface::WriteProtobuffer(uint64_t CurrentSimNanos)
                 this->receiveUserInput(CurrentSimNanos);
             }
 
+            bool has_slept = false;
             for (size_t camCounter =0; camCounter<this->cameraConfInMsgs.size(); camCounter++) {
                 /*! - If the camera is requesting periodic images, request them */
                 if (CurrentSimNanos%this->cameraConfigBuffers[camCounter].renderRate == 0 &&
                     this->cameraConfigBuffers[camCounter].isOn == 1)
                 {
+                    if (!has_slept) {
+                        /*! -- Short delay for update */
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        has_slept = true;
+                    } 
+
                     this->requestImage(camCounter, CurrentSimNanos);
                 }
             }
@@ -1406,9 +1413,6 @@ void VizInterface::receiveUserInput(uint64_t CurrentSimNanos){
  */
 void VizInterface::requestImage(size_t camCounter, uint64_t CurrentSimNanos)
 {
-
-    /*! -- Short delay for update */
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
     char buffer[10];
     zmq_recv(this->requester_socket, buffer, 10, 0);
