@@ -123,10 +123,27 @@ void VizInterface::Reset(uint64_t CurrentSimNanos)
 
         zmq_msg_init_data(&request, message, 4, message_buffer_deallocate, NULL);
         zmq_msg_send(&request, this->requester_socket, 0);
+        // Set the receive timeout to 10000 milliseconds (1 second)
+        int timeout = 10000; // Timeout in milliseconds
+        zmq_setsockopt(this->requester_socket, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+
+        // Buffer to receive the message
         char buffer[4];
-        zmq_recv (this->requester_socket, buffer, 4, 0);
-        zmq_send (this->requester_socket, "PING", 4, 0);
-        bskLogger.bskLog(BSK_INFORMATION, "Basilisk-Vizard connection made");
+
+        // Receive the message with timeout
+        int rc = zmq_recv(this->requester_socket, buffer, 4, 0);
+        if (rc == -1 && zmq_errno() == EAGAIN) {
+            // Handle the timeout case
+            bskLogger.bskLog(BSK_WARNING, "Receive timed out");
+        } else if (rc == -1) {
+            // Handle other errors
+            bskLogger.bskLog(BSK_ERROR, "Receive failed");
+        } else {
+            // Successfully received the message
+            zmq_send (this->requester_socket, "PING", 4, 0);
+            bskLogger.bskLog(BSK_INFORMATION, "Basilisk-Vizard connection made");
+        }
+
         zmq_msg_close(&request);
     }
 
