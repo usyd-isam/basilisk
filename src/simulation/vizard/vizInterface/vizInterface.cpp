@@ -123,8 +123,8 @@ void VizInterface::Reset(uint64_t CurrentSimNanos)
 
         zmq_msg_init_data(&request, message, 4, message_buffer_deallocate, NULL);
         zmq_msg_send(&request, this->requester_socket, 0);
-        // Set the receive timeout to 10000 milliseconds (1 second)
-        int timeout = 10000; // Timeout in milliseconds
+        // Set the receive timeout to 15000 milliseconds (15 second)
+        int timeout = 15000; // Timeout in milliseconds
         zmq_setsockopt(this->requester_socket, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 
         // Buffer to receive the message
