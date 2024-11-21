@@ -78,6 +78,7 @@ public:
     int ppMaxBlurSize{};          //!< Convolution kernel size of the bokeh filter, which determines the maximum radius of bokeh. It also affects the performance (the larger the kernel is, the longer the GPU time is required). Depth textures Value of 1 for Small, 2 for Medium, 3 for Large, 4 for Extra Large. Value of 0 to turn off this parameter entirely.
 
     /*! Noise paramters */
+    bool bw{};                //!< whether to conver to greyscale image
     double gaussian{};        //!< Gaussian noise level
     double darkCurrent{};    //!< Dark current intensity
     double saltPepper{};    //!< Stuck and Dark pixels probability
