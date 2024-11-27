@@ -1216,7 +1216,7 @@ void VizInterface::WriteProtobuffer(uint64_t CurrentSimNanos)
                 {
                     if (!has_slept) {
                         /*! -- Short delay for update */
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                         has_slept = true;
                     } 
 
