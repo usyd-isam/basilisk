@@ -260,10 +260,6 @@ void Camera::applyFilters(cv::Mat &mSource, cv::Mat &mDst){
     cv::Mat mFilters(mSource.size(), mSource.type());
     mSource.convertTo(mFilters, mSource.type());
 
-    if (this->bw){
-        cv::cvtColor(mFilters, mFilters, cv::COLOR_BGR2GRAY);
-        cv::cvtColor(mFilters, mFilters, cv::COLOR_GRAY2BGR); // to keep the 3 channels
-    }
     if (this->gaussian > 0){
         float scale = 2;
         this->addGaussianNoise(mFilters, mFilters, 0, this->gaussian * scale);
@@ -334,9 +330,6 @@ void Camera::UpdateState(uint64_t currentSimNanos)
     cameraMsg.ppFocalLength = this->ppFocalLength;
     cameraMsg.ppFocusDistance = this->ppFocusDistance;
     cameraMsg.ppMaxBlurSize = this->ppMaxBlurSize;
-    cameraMsg.renderMode = this->renderMode;
-    cameraMsg.depthMapClippingPlanes[0] = this->depthMapClippingPlanes[0];
-    cameraMsg.depthMapClippingPlanes[1] = this->depthMapClippingPlanes[1];
 
     /*! - Update the camera config data no matter if an image is present*/
     this->cameraConfigOutMsg.write(&cameraMsg, this->moduleID, currentSimNanos);
@@ -344,7 +337,7 @@ void Camera::UpdateState(uint64_t currentSimNanos)
     cv::Mat imageCV;
     cv::Mat blurred;
     if (this->saveDir != ""){
-        localPath = this->saveDir + std::to_string(currentSimNanos) + ".png";
+        localPath = this->saveDir + std::to_string(currentSimNanos*1E-9) + ".png";
     }
     /*! - Read in the bitmap*/
     if(this->imageInMsg.isLinked())
@@ -357,14 +350,8 @@ void Camera::UpdateState(uint64_t currentSimNanos)
         imageCV = imread(this->filename, cv::IMREAD_COLOR);
         this->applyFilters(imageCV, blurred);
         if (this->saveImages == 1){
-            if (this->bw){
-                cv::cvtColor(blurred, blurred, cv::COLOR_BGR2GRAY);
-            }
             if (!cv::imwrite(localPath, blurred)) {
                 bskLogger.bskLog(BSK_WARNING, "camera: wasn't able to save the camera module image" );
-            }
-            if (this->bw){
-                cv::cvtColor(blurred, blurred, cv::COLOR_GRAY2BGR); // back to 3 channels
             }
         }
     }
@@ -376,14 +363,8 @@ void Camera::UpdateState(uint64_t currentSimNanos)
 
         this->applyFilters(imageCV, blurred);
         if (this->saveImages == 1){
-            if (this->bw){
-                cv::cvtColor(blurred, blurred, cv::COLOR_BGR2GRAY);
-            }
             if (!cv::imwrite(localPath, blurred)) {
                 bskLogger.bskLog(BSK_WARNING, "camera: wasn't able to save the camera module image" );
-            }
-            if (this->bw){
-                cv::cvtColor(blurred, blurred, cv::COLOR_GRAY2BGR); // back to 3 channels
             }
         }
         /*! If the permanent image buffer is not populated, it will be equal to null*/

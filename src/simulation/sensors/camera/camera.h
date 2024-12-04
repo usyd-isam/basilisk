@@ -40,9 +40,9 @@
 class Camera: public SysModel {
 public:
     Camera();
-    ~Camera();
+    virtual ~Camera();
     
-    void UpdateState(uint64_t currentSimNanos) override;
+    virtual void UpdateState(uint64_t currentSimNanos) override;
     void Reset(uint64_t currentSimNanos) override;
     void hsvAdjust(const cv::Mat&, cv::Mat &mDst);
     void bgrAdjustPercent(const cv::Mat&, cv::Mat &mDst);
@@ -78,7 +78,6 @@ public:
     int ppMaxBlurSize{};          //!< Convolution kernel size of the bokeh filter, which determines the maximum radius of bokeh. It also affects the performance (the larger the kernel is, the longer the GPU time is required). Depth textures Value of 1 for Small, 2 for Medium, 3 for Large, 4 for Extra Large. Value of 0 to turn off this parameter entirely.
 
     /*! Noise paramters */
-    bool bw{};                //!< whether to conver to greyscale image
     double gaussian{};        //!< Gaussian noise level
     double darkCurrent{};    //!< Dark current intensity
     double saltPepper{};    //!< Stuck and Dark pixels probability
@@ -87,13 +86,9 @@ public:
     Eigen::Vector3d hsv{Eigen::Vector3d::Zero()};    //!< (double) HSV color correction, H (-pi/pi) hue shift, S and V are percent multipliers
     Eigen::Vector3d bgrPercent{Eigen::Vector3d::Zero()}; //!< (int) BGR color correction values as percent
 
-     /* Depth parameters */
-    int renderMode; //!< (Optional) Value of 0 to render visual image (default), value of 1 to render depth buffer to image
-    double depthMapClippingPlanes[2]; //!< (Optional) [m] Set the bounds of rendered depth map by setting the near and far clipping planes when in renderMode=1 (depthMap mode). Default values of 0.1 and 100.
-
     BSKLogger bskLogger;                      //!< -- BSK Logging
 
-private:
+protected:
     uint64_t localCurrentSimNanos{};
     void* pointImageOut{nullptr};      //!< void pointer for image memory passing
 };
