@@ -41,8 +41,8 @@ public:
     void UpdateState(uint64_t CurrentSimNanos);
     virtual void Reset(uint64_t CurrentSimNanos);
     virtual bool ReadMessages();
-    void WriteMessages(uint64_t CurrentClock);
-    void addSpacecraftToModel(Message<SCStatesMsgPayload> *tmpScMsg);
+    virtual void WriteMessages(uint64_t CurrentClock);
+    virtual void addSpacecraftToModel(Message<SCStatesMsgPayload> *tmpScMsg);
     
 protected:
     virtual void computeAccess();
