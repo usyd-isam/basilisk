@@ -37,12 +37,12 @@ public:
     SimpleNav();
     ~SimpleNav();
 
-    void Reset(uint64_t CurrentSimNanos);
+    virtual void Reset(uint64_t CurrentSimNanos);
     void UpdateState(uint64_t CurrentSimNanos);
     void computeTrueOutput(uint64_t Clock);
     void computeErrors(uint64_t CurrentSimNanos);
     void applyErrors();
-    void readInputMessages();
+    virtual void readInputMessages();
     void writeOutputMessages(uint64_t Clock);
 
 public:
@@ -64,9 +64,11 @@ public:
     ReadFunctor<SCStatesMsgPayload> scStateInMsg;      //!< spacecraft state input msg
     ReadFunctor<SpicePlanetStateMsgPayload> sunStateInMsg; //!< (optional) sun state input input msg
 
+protected:
+    GaussMarkov errorModel;            //!< -- Gauss-markov error states
+    
 private:
     Eigen::MatrixXd AMatrix;           //!< -- The matrix used to propagate the state
-    GaussMarkov errorModel;            //!< -- Gauss-markov error states
     uint64_t prevTime;                 //!< -- Previous simulation time observed
 };
 
