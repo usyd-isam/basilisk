@@ -175,7 +175,6 @@ class BasiliskConan(ConanFile):
             self.options['opencv'].with_openexr = False  # encode/decode image in EXR format
             self.options['opencv'].with_webp = False  # encode/decode image in WEBP format
             self.options['opencv'].with_quirc = False  # QR code lib
-            self.options['opencv'].build_opencv_python3 = True # build the python bindings
             self.requires.add("zlib/1.2.13")
             self.requires.add("xz_utils/5.4.0")
 
@@ -249,6 +248,7 @@ class BasiliskConan(ConanFile):
         cmake.definitions["BUILD_VIZINTERFACE"] = self.options.vizInterface
         cmake.definitions["EXTERNAL_MODULES_PATH"] = self.options.pathToExternalModules
         cmake.definitions["PYTHON_VERSION"] = f"{sys.version_info.major}.{sys.version_info.minor}"
+        cmake.definitions["BUILD_opencv_python3"] = "ON" if self.options.opNav else "OFF"
 
         if self.options.pyLimitedAPI != "":
             cmake.definitions["PY_LIMITED_API"] = self.options.pyLimitedAPI
