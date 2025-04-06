@@ -31,6 +31,7 @@ try:
         print("use version 1.40.1+ to work with the conan repo changes from 2021." + endColor)
         exit(0)
     from conans import ConanFile, CMake, tools
+    from conan.tools.cmake import CMakeToolchain
 except ModuleNotFoundError:
     print("Please make sure you install python conan (version 1.xx, not 2.xx) package\nRun command `pip install conan` "
           "for Windows\nRun command `pip3 install conan` for Linux/MacOS")
@@ -164,6 +165,12 @@ class BasiliskConan(ConanFile):
                     subprocess.check_call(installCmd)
                 except subprocess.CalledProcessError:
                     print(failColor + "Was not able to install " + elem + endColor)
+
+    def generate(self):
+        if self.options.OpNav:
+            tc = CMakeToolchain()
+            tc.variables["BUILD_opencv_python3"] = True
+            tc.generate()
 
     def requirements(self):
         if self.options.opNav:
