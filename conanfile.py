@@ -166,15 +166,10 @@ class BasiliskConan(ConanFile):
                 except subprocess.CalledProcessError:
                     print(failColor + "Was not able to install " + elem + endColor)
 
-    def generate(self):
-        tc = CMakeToolchain()
-        tc.variables["BUILD_opencv_python3"] = True
-        tc.generate()
-
     def requirements(self):
         if self.options.opNav:
             self.requires.add("pcre/8.45")
-            self.requires.add("opencv/4.5.5")
+            self.requires.add("opencv/4.5.5@mychannel/withpython")
             self.options['opencv'].with_ffmpeg = False  # video frame encoding lib
             self.options['opencv'].with_ade = False  # graph manipulations framework
             self.options['opencv'].with_tiff = False  # encode/decode image in TIFF format
