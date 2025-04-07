@@ -167,10 +167,9 @@ class BasiliskConan(ConanFile):
                     print(failColor + "Was not able to install " + elem + endColor)
 
     def generate(self):
-        if self.options.OpNav:
-            tc = CMakeToolchain()
-            tc.variables["BUILD_opencv_python3"] = True
-            tc.generate()
+        tc = CMakeToolchain()
+        tc.variables["BUILD_opencv_python3"] = True
+        tc.generate()
 
     def requirements(self):
         if self.options.opNav:
@@ -255,7 +254,6 @@ class BasiliskConan(ConanFile):
         cmake.definitions["BUILD_VIZINTERFACE"] = self.options.vizInterface
         cmake.definitions["EXTERNAL_MODULES_PATH"] = self.options.pathToExternalModules
         cmake.definitions["PYTHON_VERSION"] = f"{sys.version_info.major}.{sys.version_info.minor}"
-        cmake.definitions["BUILD_opencv_python3"] = "ON" if self.options.opNav else "OFF"
 
         if self.options.pyLimitedAPI != "":
             cmake.definitions["PY_LIMITED_API"] = self.options.pyLimitedAPI
