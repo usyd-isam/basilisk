@@ -25,7 +25,7 @@ import math
 #   function to convert seconds to an integer nanoseconds value
 def sec2nano(time):
     """convert seconds to nano-seconds"""
-    return int(time*1E9+0.5)
+    return int(time*1e9+0.5)
 
 
 #   function to convert minutes to an integer nanoseconds value
