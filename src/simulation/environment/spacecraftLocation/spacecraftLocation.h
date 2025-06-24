@@ -40,13 +40,13 @@ class SpacecraftLocation : public SysModel
     SpacecraftLocation();
     ~SpacecraftLocation();
     void UpdateState(uint64_t CurrentSimNanos);
-    void Reset(uint64_t CurrentSimNanos);
-    bool ReadMessages();
-    void WriteMessages(uint64_t CurrentClock);
-    void addSpacecraftToModel(Message<SCStatesMsgPayload>* tmpScMsg);
+    virtual void Reset(uint64_t CurrentSimNanos);
+    virtual bool ReadMessages();
+    virtual void WriteMessages(uint64_t CurrentClock);
+    virtual void addSpacecraftToModel(Message<SCStatesMsgPayload>* tmpScMsg);
 
-  private:
-    void computeAccess();
+  protected:
+    virtual void computeAccess();
 
   public:
     double rEquator;     //!< [m] equatorial planet radius
@@ -69,7 +69,7 @@ class SpacecraftLocation : public SysModel
 
     BSKLogger bskLogger; //!< -- BSK Logging
 
-  private:
+  protected:
     std::vector<AccessMsgPayload> accessMsgBuffer;  //!< buffer of access output data
     std::vector<SCStatesMsgPayload> scStatesBuffer; //!< buffer of other spacecraft states
     SCStatesMsgPayload primaryScStatesBuffer;       //!< buffer of primary spacecraft states
