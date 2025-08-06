@@ -46,11 +46,11 @@ public:
     ThrusterStateEffector();
     ~ThrusterStateEffector();
     void Reset(uint64_t CurrentSimNanos);
-    bool ReadInputs();
+    virtual bool ReadInputs();
     void writeOutputStateMessages(uint64_t CurrentClock);
     void registerStates(DynParamManager& states);  //!< -- Method for the effector to register its states
     void linkInStates(DynParamManager& states);  //!< -- Method for the effector to get access of other states
-    void computeDerivatives(double integTime, Eigen::Vector3d rDDot_BN_N, Eigen::Vector3d omegaDot_BN_B, Eigen::Vector3d sigma_BN);  //!< -- Method for each stateEffector to calculate derivatives
+    virtual void computeDerivatives(double integTime, Eigen::Vector3d rDDot_BN_N, Eigen::Vector3d omegaDot_BN_B, Eigen::Vector3d sigma_BN);  //!< -- Method for each stateEffector to calculate derivatives
     void calcForceTorqueOnBody(double integTime, Eigen::Vector3d omega_BN_B);
     void updateContributions(double integTime, BackSubMatrices& backSubContr, Eigen::Vector3d sigma_BN, Eigen::Vector3d omega_BN_B, Eigen::Vector3d g_N);  //!< Method to pass the forces and torques onto the hub
     void updateEffectorMassProps(double integTime);
@@ -84,6 +84,10 @@ public:
     // Mass flow rate
     double mDotTotal = 0.0;           //!< [kg/s] Current mass flow rate of thrusters
 
+protected:
+    double prevCommandTime;                       //!< [s] -- Time for previous valid thruster firing
+    static uint64_t effectorID;    //!< [] ID number of this panel
+    
 private:
     std::vector<THROutputMsgPayload> thrusterOutBuffer;//!< -- Message buffer for thruster data
 
@@ -93,8 +97,6 @@ private:
     SCStatesMsgPayload attachedBodyBuffer;
     std::vector<BodyToHubInfo> bodyToHubInfo;
 
-    double prevCommandTime;                       //!< [s] -- Time for previous valid thruster firing
-    static uint64_t effectorID;    //!< [] ID number of this panel
 };
 
 
